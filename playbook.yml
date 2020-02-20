@@ -1,0 +1,98 @@
+---
+
+- hosts:
+  - scratch
+  gather_facts: False
+  become: yes
+  tasks:
+  - name: Install Python (if not yet there)
+    raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+
+- hosts:
+  - scratch
+  become: yes
+  vars:
+    ubuntu_password: changeme_iP4Opoozaj
+    swap_file_path: /swap.img
+    swap_size: 2000
+    chrome_deb_url: https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+  tasks:
+  - name: Add APT repository for x2go
+    apt_repository:
+      repo: ppa:x2go/stable
+      state: present
+
+  - name: Upgrade everything
+    apt:
+      upgrade: dist
+      update_cache: yes
+
+  - name: Install packages
+    apt:
+      pkg:
+      - x2goserver
+      - x2goserver-xsession
+      - xfce4
+      - firefox
+      - evince 
+      - eog
+      - libappindicator3-1
+      - fonts-liberation 
+      - gedit
+      - xfce4-screenshooter
+      - kolourpaint
+
+  - name: Nuke old config
+    file:
+      path: /home/ubuntu/.config
+      state: absent
+
+  - name: Put customized config (Xfce, Chrome)
+    copy:
+      src: "homedir/{{ item }}"
+      dest: /home/ubuntu/
+      owner: ubuntu
+    with_items:
+    - ".config"
+    - ".local"
+
+  - name: Set interactive login password
+    user:
+      name: ubuntu
+      password: "{{ ubuntu_password | password_hash('sha512') }}"
+
+  - name: Enable password authentication
+    lineinfile: 
+     dest: /etc/ssh/sshd_config
+     regexp: '^#?PasswordAuthentication'
+     line: 'PasswordAuthentication yes'
+
+  - name: Restart SSH server
+    service:
+      name: ssh
+      state: restarted
+ 
+  - name: Make ubuntu user root-like
+    lineinfile:
+      dest: /etc/sudoers
+      line: 'ubuntu ALL=(ALL) NOPASSWD: ALL'
+      validate: 'visudo -cf %s'
+
+  - name: Install Google Chrome
+    apt:
+      deb: "{{ chrome_deb_url }}"
+
+  - name: Check if swap file exists
+    stat:
+      path: "{{ swap_file_path }}"
+    register: swap_result
+
+  - name: Create and enable swap file
+    command: '{{ item }}'
+    with_items:
+    - 'dd if=/dev/zero of={{ swap_file_path }} bs=1M count={{ swap_size }}'
+    - 'chmod 600 {{ swap_file_path }}'
+    - 'mkswap {{ swap_file_path }}'
+    - 'swapon {{ swap_file_path }}'
+    when: not swap_result.stat.exists
+
