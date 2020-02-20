@@ -48,7 +48,7 @@
       state: absent
 
   - name: Put customized config (Xfce, Chrome)
-    shell: "cp -r {{ item }} /home/ubuntu && chown -R ubuntu:ubuntu /home/ubuntu/{{ item }}"
+    shell: "cp -r homedir/{{ item }} /home/ubuntu && chown -R ubuntu:ubuntu /home/ubuntu/{{ item }}"
     with_items:
     - ".config"
     - ".local"
