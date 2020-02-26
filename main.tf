@@ -4,7 +4,7 @@ provider "aws" {
 
 resource "aws_instance" "scratch" {
   ami             = "ami-0ac05733838eabc06"
-  instance_type   = "t3.small"
+  instance_type   = "t3a.medium"
   key_name        = "id_rsa"
   security_groups = ["all-open"]
   user_data       = "${file("setup.sh")}"

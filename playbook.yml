@@ -42,6 +42,11 @@
       - xfce4-screenshooter
       - kolourpaint
 
+  - name: Remove screensaver (saves bandwidth)
+    apt:
+      name: xscreensaver
+      state: absent
+
   - name: Nuke old config
     file:
       path: /home/ubuntu/.config
