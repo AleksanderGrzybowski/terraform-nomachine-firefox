@@ -41,6 +41,7 @@
       - gedit
       - xfce4-screenshooter
       - kolourpaint
+      - unzip
 
   - name: Remove screensaver (saves bandwidth)
     apt:
