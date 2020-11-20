@@ -2,3 +2,5 @@
 .terraform/
 *.backup
 *.retry
+.idea
+.terraform.tfstate.lock.info

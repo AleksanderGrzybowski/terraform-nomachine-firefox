@@ -2,19 +2,11 @@
 
 - hosts:
   - scratch
-  gather_facts: False
-  become: yes
-  tasks:
-  - name: Install Python (if not yet there)
-    raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
-
-- hosts:
-  - scratch
   become: yes
   vars:
     ubuntu_password: changeme_iP4Opoozaj
     swap_file_path: /swap.img
-    swap_size: 2000
+    swap_size: 2000 # swap is not necessary, but useful in case of using low-memory instances.
     chrome_deb_url: https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
   tasks:
   - name: Add APT repository for x2go
@@ -53,7 +45,7 @@
       path: /home/ubuntu/.config
       state: absent
 
-  - name: Put customized config (Xfce, Chrome)
+  - name: Put customized config (Xfce panel setup, Chrome profile with smooth scrolling disabled)
     shell: "cp -r homedir/{{ item }} /home/ubuntu && chown -R ubuntu:ubuntu /home/ubuntu/{{ item }}"
     with_items:
     - ".config"
@@ -70,7 +62,7 @@
      regexp: '^#?PasswordAuthentication'
      line: 'PasswordAuthentication yes'
 
-  - name: Restart SSH server
+  - name: Restart SSH server for enabling password authentication
     service:
       name: ssh
       state: restarted
