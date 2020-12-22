@@ -6,8 +6,9 @@
   vars:
     ubuntu_password: changeme_iP4Opoozaj
     swap_file_path: /swap.img
-    swap_size: 2000 # swap is not necessary, but useful in case of using low-memory instances.
+    swap_size: 2000 # swap is not necessary, but useful in case of using cheaper low-memory instances.
     chrome_deb_url: https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+    nomachine_deb_url: https://download.nomachine.com/download/7.0/Linux/nomachine_7.0.209_9_amd64.deb
   tasks:
   - name: Add APT repository for x2go
     apt_repository:
@@ -76,6 +77,16 @@
   - name: Install Google Chrome
     apt:
       deb: "{{ chrome_deb_url }}"
+
+  - name: Install NoMachine
+    apt:
+      deb: "{{ nomachine_deb_url }}"
+
+  - name: Configure NoMachine for XFCE
+    lineinfile:
+     dest: /usr/NX/etc/node.cfg
+     regexp: '^DefaultDesktopCommand'
+     line: 'DefaultDesktopCommand "/usr/bin/X11/startxfce4"'
 
   - name: Check if swap file exists
     stat:
