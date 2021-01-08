@@ -61,17 +61,6 @@
       name: ubuntu
       password: "{{ ubuntu_password | password_hash('sha512') }}"
 
-  - name: Enable password authentication
-    lineinfile: 
-     dest: /etc/ssh/sshd_config
-     regexp: '^#?PasswordAuthentication'
-     line: 'PasswordAuthentication yes'
-
-  - name: Restart SSH server for enabling password authentication
-    service:
-      name: ssh
-      state: restarted
- 
   - name: Make ubuntu user root-like
     lineinfile:
       dest: /etc/sudoers
@@ -91,6 +80,17 @@
      dest: /usr/NX/etc/node.cfg
      regexp: '^DefaultDesktopCommand'
      line: 'DefaultDesktopCommand "/usr/bin/X11/startxfce4"'
+
+  - name: Enable password authentication
+    lineinfile: 
+     dest: /etc/ssh/sshd_config
+     regexp: '^#?PasswordAuthentication'
+     line: 'PasswordAuthentication yes'
+
+  - name: Restart SSH server for enabling password authentication
+    service:
+      name: ssh
+      state: restarted
 
   - name: Check if swap file exists
     stat:
