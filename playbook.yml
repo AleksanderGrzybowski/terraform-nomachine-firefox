@@ -8,7 +8,11 @@
     swap_file_path: /swap.img
     swap_size: 2000 # swap is not necessary, but useful in case of using cheaper low-memory instances.
     chrome_deb_url: https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-    nomachine_deb_url: https://download.nomachine.com/download/7.0/Linux/nomachine_7.0.209_9_amd64.deb
+    # Note: this NoMachine deb URL may change (it happened once) and it's not directly available
+    # on their website. If you get errors from APT about corrupted package, this means
+    # that there is a new URL. Try downloading installation package from website,
+    # then go to browser devtools and extract direct link.
+    nomachine_deb_url: https://download.nomachine.com/download/7.0/Linux/nomachine_7.0.211_4_amd64.deb
   tasks:
   - name: Add APT repository for x2go
     apt_repository:
