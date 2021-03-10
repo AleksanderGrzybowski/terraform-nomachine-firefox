@@ -13,7 +13,22 @@
     # that there is a new URL. Try downloading installation package from website,
     # then go to browser devtools and extract direct link.
     nomachine_deb_url: https://download.nomachine.com/download/7.0/Linux/nomachine_7.0.211_4_amd64.deb
+
   tasks:
+  - name: Check if swap file exists
+    stat:
+      path: "{{ swap_file_path }}"
+    register: swap_result
+
+  - name: Create and enable swap file
+    command: '{{ item }}'
+    with_items:
+    - 'dd if=/dev/zero of={{ swap_file_path }} bs=1M count={{ swap_size }}'
+    - 'chmod 600 {{ swap_file_path }}'
+    - 'mkswap {{ swap_file_path }}'
+    - 'swapon {{ swap_file_path }}'
+    when: not swap_result.stat.exists
+
   - name: Add APT repository for x2go
     apt_repository:
       repo: ppa:x2go/stable
@@ -91,18 +106,4 @@
     service:
       name: ssh
       state: restarted
-
-  - name: Check if swap file exists
-    stat:
-      path: "{{ swap_file_path }}"
-    register: swap_result
-
-  - name: Create and enable swap file
-    command: '{{ item }}'
-    with_items:
-    - 'dd if=/dev/zero of={{ swap_file_path }} bs=1M count={{ swap_size }}'
-    - 'chmod 600 {{ swap_file_path }}'
-    - 'mkswap {{ swap_file_path }}'
-    - 'swapon {{ swap_file_path }}'
-    when: not swap_result.stat.exists
 
