@@ -35,6 +35,7 @@
       state: present
 
   - name: Upgrade everything
+    retries: 5
     apt:
       upgrade: dist
       update_cache: yes
