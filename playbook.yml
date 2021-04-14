@@ -12,7 +12,7 @@
     # on their website. If you get errors from APT about corrupted package, this means
     # that there is a new URL. Try downloading installation package from website,
     # then go to browser devtools and extract direct link.
-    nomachine_deb_url: https://download.nomachine.com/download/7.0/Linux/nomachine_7.0.211_4_amd64.deb
+    nomachine_deb_url: https://download.nomachine.com/download/7.4/Linux/nomachine_7.4.1_1_amd64.deb
 
   tasks:
   - name: Check if swap file exists
