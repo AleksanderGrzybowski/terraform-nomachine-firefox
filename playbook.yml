@@ -112,3 +112,20 @@
     service:
       name: gdm
       enabled: no
+
+  - name: Ensure autostart directory exists
+    file:
+      path: /home/ubuntu/.config/autostart
+      state: directory
+      recurse: true
+
+  - name: Put autostart script for setting up Polish keyboard
+    copy:
+      dest: /home/ubuntu/.config/autostart/keyboard.desktop
+      content: |
+        [Desktop Entry]
+        Type=Application
+        Name=keyboard
+        Exec=setxkbmap pl
+        StartupNotify=false
+        Terminal=false
