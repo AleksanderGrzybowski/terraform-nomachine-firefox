@@ -47,7 +47,7 @@ resource "aws_security_group" "scratch_security_group" {
 }
 
 resource "aws_instance" "scratch" {
-  ami             = "ami-0502e817a62226e03"
+  ami             = "ami-05f7491af5eef733a"
   instance_type   = "t3a.small"
   key_name        = aws_key_pair.scratch_ssh_key.key_name
   security_groups = [aws_security_group.scratch_security_group.name]
