@@ -108,3 +108,7 @@
       name: ssh
       state: restarted
 
+  - name: Disable GDM (we want NoMachine to start graphical environment manually)
+    service:
+      name: gdm
+      enabled: no
