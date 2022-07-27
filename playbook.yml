@@ -12,7 +12,7 @@
     # on their website. If you get errors from APT about corrupted package, this means
     # that there is a new URL. Try downloading installation package from website,
     # then go to browser devtools and extract direct link.
-    nomachine_deb_url: https://download.nomachine.com/download/7.4/Linux/nomachine_7.4.1_1_amd64.deb
+    nomachine_deb_url: https://download.nomachine.com/download/7.10/Linux/nomachine_7.10.1_1_amd64.deb
 
   tasks:
   - name: Check if swap file exists
@@ -29,22 +29,9 @@
     - 'swapon {{ swap_file_path }}'
     when: not swap_result.stat.exists
 
-  - name: Add APT repository for x2go
-    apt_repository:
-      repo: ppa:x2go/stable
-      state: present
-
-  - name: Upgrade everything
-    retries: 5
-    apt:
-      upgrade: dist
-      update_cache: yes
-
   - name: Install packages
     apt:
       pkg:
-      - x2goserver
-      - x2goserver-xsession
       - xfce4
       - firefox
       - evince 
@@ -107,11 +94,6 @@
     service:
       name: ssh
       state: restarted
-
-  - name: Disable GDM (we want NoMachine to start graphical environment manually)
-    service:
-      name: gdm
-      enabled: no
 
   - name: Ensure autostart directory exists
     file:
