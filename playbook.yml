@@ -111,3 +111,8 @@
         Exec=setxkbmap pl
         StartupNotify=false
         Terminal=false
+
+  - name: Install nginx for Terraform to know, that the server is ready
+    apt:
+      pkg:
+      - nginx

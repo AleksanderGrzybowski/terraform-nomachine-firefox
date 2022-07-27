@@ -34,6 +34,14 @@ resource "aws_security_group" "scratch_security_group" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  ingress {
+    description = "HTTP inbound"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -56,6 +64,14 @@ resource "aws_instance" "scratch" {
   tags = {
     Name = "scratch"
   }
+}
+
+data "external" "wait_for_up" {
+  program = ["./wait_for_up.sh", aws_instance.scratch.public_ip]
+
+  depends_on = [
+    aws_instance.scratch
+  ]
 }
 
 output "instance_ip_addr" {
