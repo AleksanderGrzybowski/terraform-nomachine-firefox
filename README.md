@@ -1,12 +1,20 @@
-Terraform script for provisioning EC2 instance with 
+# Private remote browser in AWS
 
-* graphical Xubuntu environment
-* *NoMachine* remote desktop servers
-* Firefox, Google Chrome, and other extras
+## What is this?
 
-useful for *very* private browsing, totally not at work.
+This Terraform setup can be used to create a secure and private browsing experience, for situations where certain websites are blocked at network level or could contain harmful scripts.
 
-Run `terraform apply`, then connect with NoMachine client (user `ubuntu`, port 4000) using IP printed back at the end. There is also manual bash script for Digital Ocean cloud. The idea behind this complicated setup is zero costs when not used, that's why everything is reprovisioned from scratch every time. 
+## How it works?
 
+This setup consists of:
+
+* AWS VPC and required network resources to run a remote desktop environment, provisioned by Terraform,
+* EC2 Ubuntu instance with password login (no keys required),
+* graphical Xubuntu environment with Firefox, Google Chrome and other extras, provisioned by Ansible,
+* NoMachine remote desktop service.
+
+## How to run it?
+
+Run `terraform apply`, then connect with NoMachine client (user `ubuntu`, port 4000) using public IP printed back at the end. Everything will be provisioned at runtime for cost saving. To remove everything, run `terraform destroy`.
 
 ![Screenshot 1](screenshot.png)
