@@ -15,41 +15,13 @@
     nomachine_deb_url: https://download.nomachine.com/download/8.4/Linux/nomachine_8.4.2_1_amd64.deb
 
   tasks:
-  - name: Check if swap file exists
-    stat:
-      path: "{{ swap_file_path }}"
-    register: swap_result
-
-  - name: Create and enable swap file
-    command: '{{ item }}'
-    with_items:
-    - 'dd if=/dev/zero of={{ swap_file_path }} bs=1M count={{ swap_size }}'
-    - 'chmod 600 {{ swap_file_path }}'
-    - 'mkswap {{ swap_file_path }}'
-    - 'swapon {{ swap_file_path }}'
-    when: not swap_result.stat.exists
-
-  - name: Install packages
+  - name: Install necessary packages to connect to NoMachine
     apt:
       pkg:
       - xfce4
       - firefox
-      - evince 
-      - eog
       - libappindicator3-1
       - fonts-liberation 
-      - gedit
-      - xfce4-screenshooter
-      - kolourpaint
-      - unzip
-      - awscli
-      - vlc
-      - yt-dlp
-
-  - name: Remove screensaver (saves bandwidth)
-    apt:
-      name: xscreensaver
-      state: absent
 
   - name: Nuke old config
     file:
@@ -73,13 +45,13 @@
       line: 'ubuntu ALL=(ALL) NOPASSWD: ALL'
       validate: 'visudo -cf %s'
 
-  - name: Install Google Chrome
-    apt:
-      deb: "{{ chrome_deb_url }}"
-
   - name: Install NoMachine
     apt:
       deb: "{{ nomachine_deb_url }}"
+
+  - name: Install Google Chrome
+    apt:
+      deb: "{{ chrome_deb_url }}"
 
   - name: Configure NoMachine for XFCE
     lineinfile:
@@ -119,3 +91,38 @@
     apt:
       pkg:
       - nginx
+
+  # These tasks below can be done in the background, after user is connected
+
+  - name: Check if swap file exists
+    stat:
+      path: "{{ swap_file_path }}"
+    register: swap_result
+
+  - name: Create and enable swap file
+    command: '{{ item }}'
+    with_items:
+    - 'dd if=/dev/zero of={{ swap_file_path }} bs=1M count={{ swap_size }}'
+    - 'chmod 600 {{ swap_file_path }}'
+    - 'mkswap {{ swap_file_path }}'
+    - 'swapon {{ swap_file_path }}'
+    when: not swap_result.stat.exists
+
+  - name: Install extra packages
+    apt:
+      pkg:
+      - evince
+      - eog
+      - gedit
+      - xfce4-screenshooter
+      - kolourpaint
+      - unzip
+      - awscli
+      - vlc
+      - yt-dlp
+
+  - name: Remove screensaver (saves bandwidth)
+    apt:
+      name: xscreensaver
+      state: absent
+
