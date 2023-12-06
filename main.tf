@@ -38,16 +38,21 @@ module "vpc" {
   cidr   = local.cidr
 }
 
+module "iam" {
+  source = "./iam"
+}
+
 # ------
 
 resource "aws_instance" "scratch_instance" {
-  ami             = var.ami
-  instance_type   = var.instance_type
-  key_name        = var.key_name == null ? module.ssh_key[0].key_name : var.key_name
-  subnet_id       = module.vpc.subnet_id
-  vpc_security_group_ids = [module.vpc.security_group_id]
-  user_data       = file("setup.sh")
+  ami                         = var.ami
+  instance_type               = var.instance_type
+  key_name                    = var.key_name == null ? module.ssh_key[0].key_name : var.key_name
+  subnet_id                   = module.vpc.subnet_id
+  vpc_security_group_ids      = [module.vpc.security_group_id]
+  user_data                   = file("setup.sh")
   associate_public_ip_address = true
+  iam_instance_profile        = module.iam.ec2_instance_profile_name
 
   tags = {
     Name = "scratch_instance"
