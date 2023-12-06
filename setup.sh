@@ -3,7 +3,7 @@ set -e
 
 REPO_NAME="terraform-x2go-firefox"
 REPO_URL="https://github.com/AleksanderGrzybowski/${REPO_NAME}.git"
-UBUNTU_PASSWORD="x2goletmein2020"
+UBUNTU_PASSWORD="x2goletmein"
 
 echo "Cloning ${REPO_URL}..."
 

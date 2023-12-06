@@ -42,6 +42,9 @@
       - xfce4-screenshooter
       - kolourpaint
       - unzip
+      - awscli
+      - vlc
+      - yt-dlp
 
   - name: Remove screensaver (saves bandwidth)
     apt:
