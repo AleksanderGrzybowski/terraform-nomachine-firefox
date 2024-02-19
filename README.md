@@ -13,7 +13,7 @@ They all work fine, actually they work fine with this setup too! However, having
 * Terraform creates AWS VPC and required network resources to run a remote desktop environment
 * user-data scripts set up Ubuntu instance with Ansible playbook cloned from this GitHub repository
 * Ansible provisions graphical Xubuntu environment with Firefox, Google Chrome and other tools
-* NoMachine is set up to allow remote access.
+* NoMachine is set up to allow remote access
 
 ## How to run it?
 
