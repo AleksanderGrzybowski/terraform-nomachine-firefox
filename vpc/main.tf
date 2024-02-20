@@ -1,5 +1,11 @@
-variable "cidr" {
-  type = string
+variable "cidr" { type = string }
+
+locals {
+  allowed_ingress_ports = {
+    ssh       = 22
+    http      = 80
+    nomachine = 4000
+  }
 }
 
 resource "aws_vpc" "scratch_vpc" {
@@ -39,31 +45,18 @@ resource "aws_route_table_association" "my_association" {
 
 resource "aws_security_group" "scratch_security_group" {
   name        = "scratch_allow_ssh_and_nomachine"
-  description = "Allow SSH and NoMachine inbound traffic"
+  description = "Allow necessary inbound traffic for scratch instance"
   vpc_id      = aws_vpc.scratch_vpc.id
 
-  ingress {
-    description = "SSH inbound"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    description = "NoMachine inbound"
-    from_port   = 4000
-    to_port     = 4000
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    description = "HTTP inbound"
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+  dynamic "ingress" {
+    for_each = local.allowed_ingress_ports
+    content {
+      description = "${ingress.key} inbound"
+      from_port   = ingress.value
+      to_port     = ingress.value
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
   }
 
   egress {
@@ -78,14 +71,6 @@ resource "aws_security_group" "scratch_security_group" {
   }
 }
 
-output "vpc_id" {
-  value = aws_vpc.scratch_vpc.id
-}
-
-output "security_group_id" {
-  value = aws_security_group.scratch_security_group.id
-}
-
-output "subnet_id" {
-  value = aws_subnet.scratch_subnet.id
-}
+output "vpc_id" { value = aws_vpc.scratch_vpc.id }
+output "security_group_id" { value = aws_security_group.scratch_security_group.id }
+output "subnet_id" { value = aws_subnet.scratch_subnet.id }

@@ -9,7 +9,7 @@ provider "aws" {
 
 variable "ami" {
   type    = string
-  default = "ami-0ec7f9846da6b0f61"
+  default = "ami-0faab6bdbac9486fb"
 }
 
 variable "instance_type" {
@@ -26,8 +26,6 @@ variable "root_volume_size" {
   default = "20"
 }
 
-# ------
-
 module "ssh_key" {
   count  = var.key_name == null ? 1 : 0
   source = "./ssh_key"
@@ -38,12 +36,6 @@ module "vpc" {
   cidr   = local.cidr
 }
 
-module "iam" {
-  source = "./iam"
-}
-
-# ------
-
 resource "aws_instance" "scratch_instance" {
   ami                         = var.ami
   instance_type               = var.instance_type
@@ -52,7 +44,6 @@ resource "aws_instance" "scratch_instance" {
   vpc_security_group_ids      = [module.vpc.security_group_id]
   user_data                   = file("setup.sh")
   associate_public_ip_address = true
-  iam_instance_profile        = module.iam.ec2_instance_profile_name
 
   tags = {
     Name = "scratch_instance"

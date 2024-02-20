@@ -1,5 +1,4 @@
-resource "random_pet" "scratch_key_identifier" {
-}
+resource "random_pet" "scratch_key_identifier" {}
 
 resource "tls_private_key" "scratch_key" {
   algorithm = "RSA"
@@ -11,6 +10,4 @@ resource "aws_key_pair" "scratch_key" {
   public_key = tls_private_key.scratch_key.public_key_openssh
 }
 
-output "key_name" {
-  value = aws_key_pair.scratch_key.key_name
-}
+output "key_name" { value = aws_key_pair.scratch_key.key_name }
