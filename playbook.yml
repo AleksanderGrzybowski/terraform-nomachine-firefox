@@ -12,7 +12,8 @@
     # on their website. If you get errors from APT about corrupted package, this means
     # that there is a new URL. Try downloading installation package from website,
     # then go to browser devtools and extract direct link.
-    nomachine_deb_url: https://download.nomachine.com/download/8.4/Linux/nomachine_8.4.2_1_amd64.deb
+    nomachine_deb_url: https://download.nomachine.com/download/8.12/Linux/nomachine_8.12.12_4_amd64.deb
+
 
   tasks:
   - name: Install necessary packages to connect to NoMachine
